@@ -1,0 +1,141 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using MoralisUnity;
+using UnityEngine;
+using MoralisUnity.Web3Api;
+using MoralisUnity.Web3Api.Api;
+using MoralisUnity.Web3Api.Client;
+using MoralisUnity.Web3Api.Interfaces;
+using MoralisUnity.Web3Api.Models;
+using Unity.VisualScripting;
+using MoralisClient = MoralisUnity.Web3Api.MoralisClient;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using TMPro;
+using Attribute = MoralisUnity.Web3Api.Models.Attribute;
+using Metadata = MoralisUnity.Web3Api.Models.Metadata;
+
+
+public class GetAPI : MonoBehaviour
+{
+    // Start is called before the first frame update
+    private const string ApiKey = "zb4sYWpTvVBbIoMHiuoAh4ejbEJgtwoAcRqWwVbrnY1NSgMIg6GBWrCS89ATvBQE";
+    private string _publicKey = "0x6d8b494901D0D3893646337887Adbe5c226A1985";
+    private ChainList _chain = ChainList.eth;
+
+    [SerializeField] Image _image;
+    [SerializeField] private TextMeshProUGUI _name;
+    [SerializeField] private GameObject _attributeTemplate;
+    [SerializeField] private GameObject _canvas;
+    [SerializeField] private Texture2D _defaultImage;
+    
+    IAccountApi _accountApi;
+    async void Start()
+    {
+        //string a = default;
+        //Debug.Log(string.IsNullOrWhiteSpace(ApiKey)); // false
+        //Debug.Log(string.IsNullOrWhiteSpace("")); // true
+        //Debug.Log(string.IsNullOrWhiteSpace(" ")); // true
+        //Debug.Log(string.IsNullOrWhiteSpace(string.Empty)); // true
+        //Debug.Log(string.IsNullOrWhiteSpace(a)); // true
+        //Moralis.Start("http://localhost:1337/server", "001", web3ApiKey: ApiKey);
+        
+        MoralisClient.Initialize(true, ApiKey);
+    }
+
+    public async void GetNftImage()
+    {
+
+
+        _accountApi = MoralisClient.Web3Api.Account;
+        NativeBalance balance = await _accountApi.GetNativeBalance(_publicKey, _chain);
+        Debug.Log(balance.Balance + " "  + _chain.ToString());
+
+        var nfTs = await _accountApi.GetNFTs(_publicKey, _chain);
+        if (nfTs.Result.Count == 0)
+        {
+            Debug.LogError("No NFTs found");
+            return;
+        }
+        var tokenUri = nfTs.Result[0].TokenUri;
+        string imageApi = await CallApi(tokenUri);
+        Metadata metadata = (Metadata)ApiClient.Deserialize(imageApi, typeof(Metadata));
+
+        var texture = await GetTextureFromUrl(metadata.Image);
+        if (texture == null)
+        {
+            _image.sprite = Sprite.Create(_defaultImage, new Rect(0.0f, 0.0f, _defaultImage.width, _defaultImage.height), new Vector2(0.5f, 0.5f), 100.0f);
+        }
+        else
+        {
+            _image.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            _name.text = metadata.Name;
+        }
+    }
+
+    public static async UniTask<string> CallApi(string uri)
+    {
+        using (var webRequest = UnityWebRequest.Get(uri))
+        {
+            webRequest.method = "GET";
+            webRequest.SetRequestHeader("Origin","http://127.0.0.1:8887");
+            try
+            {
+                await webRequest.SendWebRequest();
+            }
+            catch (Exception exp)
+            {
+                Debug.LogError($"Error: {exp.Message}");
+            }
+            
+            string responseText = webRequest.result == UnityWebRequest.Result.ConnectionError ? webRequest.error : webRequest.downloadHandler.text;
+            return responseText;
+        }
+        
+        
+    }
+    
+    // A function that takes a string type as an URL argument and return a Unity Texture2D type using Task
+    public static async Task<Texture2D> GetTextureFromUrl(string url)
+    {
+        // Create a web request object with the URL
+        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(url))
+        {
+            // Send the request and wait for a response asynchronously
+            await webRequest.SendWebRequest();
+
+            // Check if the request was successful
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                // Get the downloaded texture as a Texture2D object and return it
+                return DownloadHandlerTexture.GetContent(webRequest);
+            }
+            else
+            {
+                // Throw an exception with the error message
+                throw new System.Exception(webRequest.error);
+            }
+        }
+    }
+
+    public void CreateAttributeText(List<Attribute> attributes)
+    {
+        if (attributes == null)
+        {
+            Debug.LogError("No attributes found");
+            return;
+        }
+        foreach (var attribute in attributes)
+        {
+            var attributeText = Instantiate(_attributeTemplate, _canvas.transform);
+            attributeText.SetActive(true);
+            TextMeshProUGUI[] texts = attributeText.GetComponentsInChildren<TextMeshProUGUI>();
+            texts[0].text = attribute.Key;
+            texts[1].text = attribute.Value;
+        }
+    }
+}

@@ -4,6 +4,7 @@ using MoralisUnity.Web3Api.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using MoralisClient = MoralisUnity.Web3Api.MoralisClient;
 
 public class CongratView : MonoBehaviour
 {
@@ -18,8 +19,10 @@ public class CongratView : MonoBehaviour
         [SerializeField]
         private Button backButton = null;
 
+        private string ApiKey = "zb4sYWpTvVBbIoMHiuoAh4ejbEJgtwoAcRqWwVbrnY1NSgMIg6GBWrCS89ATvBQE";
+
         // Start is called before the first frame update
-        async void Start()
+        public async void Initialize()
         {
             if (addressText == null)
             {
@@ -38,17 +41,21 @@ public class CongratView : MonoBehaviour
                 Debug.LogError("Back Button not set.");
                 return;
             }
-
             
+            MoralisClient.Initialize(true, ApiKey);
+        
+
+            var publicKey = Web3WalletData.Instance.PublicKey;
                 // Display User's wallet address.
-                addressText.text = Web3WalletData.Instance.PublicKey;
+                addressText.text = FormatUserAddressForDisplay(publicKey);
 
                 // Retrieve the user's native balance;
-                NativeBalance balanceResponse = await Moralis.Web3Api.Account.GetNativeBalance(Web3WalletData.Instance.PublicKey, Web3WalletData.Instance.ChainEntry.EnumValue);
+                var accountApi = MoralisClient.Web3Api.Account;
+                NativeBalance balanceResponse = await accountApi.GetNativeBalance(publicKey, ChainList.eth);
 
                 double balance = 0.0;
-                float decimals =  Web3WalletData.Instance.ChainEntry.Decimals * 1.0f;
-                string sym =  Web3WalletData.Instance.ChainEntry.Symbol;
+                float decimals =  1.0f;
+                string sym =  "eth";
 
                 // Make sure a response to the balance request was received. The 
                 // IsNullOrWhitespace check may not be necessary ...

@@ -20,7 +20,7 @@ using Attribute = MoralisUnity.Web3Api.Models.Attribute;
 using Metadata = MoralisUnity.Web3Api.Models.Metadata;
 
 
-public class GetAPI : MonoBehaviour
+public class GetNFTImage : MonoBehaviour
 {
     // Start is called before the first frame update
     private const string ApiKey = "zb4sYWpTvVBbIoMHiuoAh4ejbEJgtwoAcRqWwVbrnY1NSgMIg6GBWrCS89ATvBQE";
@@ -34,26 +34,17 @@ public class GetAPI : MonoBehaviour
     [SerializeField] private Texture2D _defaultImage;
     
     IAccountApi _accountApi;
-    async void Start()
-    {
-        //string a = default;
-        //Debug.Log(string.IsNullOrWhiteSpace(ApiKey)); // false
-        //Debug.Log(string.IsNullOrWhiteSpace("")); // true
-        //Debug.Log(string.IsNullOrWhiteSpace(" ")); // true
-        //Debug.Log(string.IsNullOrWhiteSpace(string.Empty)); // true
-        //Debug.Log(string.IsNullOrWhiteSpace(a)); // true
-        //Moralis.Start("http://localhost:1337/server", "001", web3ApiKey: ApiKey);
-        
-        MoralisClient.Initialize(true, ApiKey);
-    }
 
     public async void GetNftImage()
     {
+        _publicKey = Web3WalletData.Instance.PublicKey;
+        var chainEntry = Web3WalletData.Instance.ChainEntry;
+        _chain = chainEntry.EnumValue;
 
-
+        MoralisClient.Initialize(true, ApiKey);
         _accountApi = MoralisClient.Web3Api.Account;
         NativeBalance balance = await _accountApi.GetNativeBalance(_publicKey, _chain);
-        Debug.Log(balance.Balance + " "  + _chain.ToString());
+        Debug.Log(balance.Balance + " "  + chainEntry.Symbol);
 
         var nfTs = await _accountApi.GetNFTs(_publicKey, _chain);
         if (nfTs.Result.Count == 0)

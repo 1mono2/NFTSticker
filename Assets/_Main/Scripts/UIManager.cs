@@ -8,12 +8,15 @@ public class UIManager : MonoBehaviour
     private GameObject authenticationKitObject = null;
 
     [SerializeField]
-    private GameObject congratulationUiObject = null;
+    private CongratView congratulationUiObject = null;
 
     [SerializeField]
     private GameObject fireworksObject = null;
 
     private Authentication auth = null;
+    
+    [SerializeField]
+    private Canvas NFTCanvas = null;
 
     private void Start()
     {
@@ -22,13 +25,15 @@ public class UIManager : MonoBehaviour
     public void Authentication_OnConnect()
     {
         authenticationKitObject.SetActive(false);
-        congratulationUiObject.SetActive(true);
+        congratulationUiObject.gameObject.SetActive(true);
+        congratulationUiObject.Initialize();
         fireworksObject.SetActive(true);
         var fireworks = fireworksObject.GetComponentsInChildren<ParticleSystem>();
         foreach (var firework in fireworks)
         {
             firework.Play();
         }
+        NFTCanvas.gameObject.SetActive(true);
     }
 
     public void LogoutButton_OnClicked()
@@ -37,7 +42,8 @@ public class UIManager : MonoBehaviour
         auth.Disconnect();
 
         authenticationKitObject.SetActive(true);
-        congratulationUiObject.SetActive(false);
+        congratulationUiObject.gameObject.SetActive(false);
         fireworksObject.SetActive(false);
+        NFTCanvas.gameObject.SetActive(false);
     }
 }

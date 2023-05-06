@@ -221,7 +221,8 @@ using MoralisUnity.Web3Api.Models;
             
             State = AuthenticationKitState.WalletConnected;
 
-            if (_signAndLoginToMoralis && !MoralisSettings.MoralisData.DisableMoralisClient)
+            //if (_signAndLoginToMoralis && !MoralisSettings.MoralisData.DisableMoralisClient)
+            if (!MoralisSettings.MoralisData.DisableMoralisClient)
             {
 
                 State = AuthenticationKitState.WalletSigning;

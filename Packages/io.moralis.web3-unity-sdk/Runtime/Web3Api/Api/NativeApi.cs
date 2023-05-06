@@ -38,6 +38,7 @@ using MoralisUnity.Web3Api.Core;
 using MoralisUnity.Web3Api.Core.Models;
 using MoralisUnity.Web3Api.Interfaces;
 using MoralisUnity.Web3Api.Models;
+using UnityEngine;
 
 namespace MoralisUnity.Web3Api.Api
 {
@@ -427,22 +428,22 @@ namespace MoralisUnity.Web3Api.Api
 		/// <returns>Returns response of the function executed</returns>
 		public async UniTask<T> RunContractFunction <T>(string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
-
+		
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling RunContractFunction");
-
+		
 			// Verify the required parameter 'functionName' is set
 			if (functionName == null) throw new ApiException(400, "Missing required parameter 'functionName' when calling RunContractFunction");
-
+		
 			// Verify the required parameter 'abi' is set
 			if (abi == null) throw new ApiException(400, "Missing required parameter 'abi' when calling RunContractFunction");
-
-			var postBody = new Dictionary<String, object>();
-			var queryParams = new Dictionary<String, String>();
-			var headerParams = new Dictionary<String, String>();
-			var formParams = new Dictionary<String, String>();
-			var fileParams = new Dictionary<String, FileParameter>();
-
+		
+			var postBody = new Dictionary<string, object>();
+			var queryParams = new Dictionary<string, string>();
+			var headerParams = new Dictionary<string, string>();
+			var formParams = new Dictionary<string, string>();
+			var fileParams = new Dictionary<string, FileParameter>();
+		
 			var path = "/{address}/function";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
@@ -452,7 +453,8 @@ namespace MoralisUnity.Web3Api.Api
 			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
 			if(providerUrl != null) queryParams.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
-
+			headerParams.Add("Content-Type", "application/json");
+		
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 

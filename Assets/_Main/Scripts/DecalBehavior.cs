@@ -16,8 +16,6 @@ public class DecalBehavior : MonoBehaviour
     [SerializeField] private GameObject _moveArrows;
     [SerializeField] private GameObject _rotateArrows;
     [SerializeField] private GameObject _scaleArrows;
-    
-    [SerializeField] private Sprite _sprite;
 
     private void OnEnable()
     {

@@ -121,10 +121,10 @@ namespace MoralisUnity.Web3Api
             var req = new UnityWebRequest(httpRequest.Target, "POST");
             Stream data = httpRequest.Data;
 
-            // if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
-            // {
-            //     data = adjData;
-            // }
+            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
+            {
+                data = adjData;
+            }
 
             byte[] buffer = new byte[data.Length];
             data.Read(buffer, 0, buffer.Length);

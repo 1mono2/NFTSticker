@@ -37,26 +37,36 @@ public class GetNFTImage : MonoBehaviour
 
     public async void GetNftImage()
     {
-        _publicKey = Web3WalletData.Instance.PublicKey;
-        var chainEntry = Web3WalletData.Instance.ChainEntry;
-        _chain = chainEntry.EnumValue;
+        //_publicKey = Web3WalletData.Instance.PublicKey;
+        //var chainEntry = Web3WalletData.Instance.ChainEntry;
+        //_chain = chainEntry.EnumValue;
 
         MoralisClient.Initialize(true, ApiKey);
         _accountApi = MoralisClient.Web3Api.Account;
         NativeBalance balance = await _accountApi.GetNativeBalance(_publicKey, _chain);
-        Debug.Log(balance.Balance + " "  + chainEntry.Symbol);
+        Debug.Log(balance.Balance + " "  + "ETH");
 
+        // Get NFTs from the account using Moralis API 
         var nfTs = await _accountApi.GetNFTs(_publicKey, _chain);
         if (nfTs.Result.Count == 0)
         {
             Debug.LogError("No NFTs found");
             return;
         }
+        
+        // Get the tokenUri from the first NFT
         var tokenUri = nfTs.Result[0].TokenUri;
         string imageApi = await CallApi(tokenUri);
         Metadata metadata = (Metadata)ApiClient.Deserialize(imageApi, typeof(Metadata));
 
-        var texture = await GetTextureFromUrl(metadata.Image);
+        // Get texture from the image url
+        var imageURL = metadata.Image;
+        // Coordinate url
+        if (imageURL.StartsWith("ipfs://"))
+        {
+            imageURL = imageURL.Replace("ipfs://", "https://ipfs.io/ipfs/");
+        }
+        var texture = await GetTextureFromUrl(imageURL);
         if (texture == null)
         {
             _image.sprite = Sprite.Create(_defaultImage, new Rect(0.0f, 0.0f, _defaultImage.width, _defaultImage.height), new Vector2(0.5f, 0.5f), 100.0f);
@@ -73,7 +83,6 @@ public class GetNFTImage : MonoBehaviour
         using (var webRequest = UnityWebRequest.Get(uri))
         {
             webRequest.method = "GET";
-            webRequest.SetRequestHeader("Origin","http://127.0.0.1:8887");
             try
             {
                 await webRequest.SendWebRequest();

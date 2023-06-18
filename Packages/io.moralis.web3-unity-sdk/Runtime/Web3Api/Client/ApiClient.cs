@@ -61,7 +61,6 @@ namespace MoralisUnity.Web3Api.Client
             get { return _defaultHeaderMap; }
         }
     
-        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// Makes the HTTP request (Sync).
         /// </summary>

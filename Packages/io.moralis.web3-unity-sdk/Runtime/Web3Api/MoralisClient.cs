@@ -19,7 +19,7 @@ namespace MoralisUnity.Web3Api
         /// Moralis server. Major advantage is api key is supplied 
         /// </summary>
         /// <param name="url"></param>
-        public static void Initialize(string url = null) => instance.client.Initialize(url);
+        public static void Initialize(string url) => instance.client.Initialize(url);
 
         /// <summary>
         /// Initialize Moralis Web3API. 

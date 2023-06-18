@@ -357,42 +357,6 @@ namespace MoralisUnity.Web3Api.Api
 
 			return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
 		}
-		
-		public async UniTask<string> GetNFTsToString(string address, ChainList chain, string cursor = null, string format = null, int? limit = null)
-		{
-
-			// Verify the required parameter 'address' is set
-			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTs");
-
-			var postBody = new Dictionary<String, String>();
-			var queryParams = new Dictionary<String, String>();
-			var headerParams = new Dictionary<String, String>();
-			var formParams = new Dictionary<String, String>();
-			var fileParams = new Dictionary<String, FileParameter>();
-
-			var path = "/{address}/nft";
-			path = path.Replace("{format}", "json");
-			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
-			if (format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
-			if (limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
-
-			// Authentication setting, if any
-			String[] authSettings = new String[] { "ApiKeyAuth" };
-
-			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
-
-			return (string)ApiClient.Deserialize(response.Item3, typeof(string), response.Item2);
-		}
 
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters

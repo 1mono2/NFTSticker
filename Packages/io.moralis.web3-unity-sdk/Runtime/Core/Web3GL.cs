@@ -15,7 +15,7 @@ namespace MoralisUnity
         private static bool isConnected;
 
         [DllImport("__Internal")]
-        private static extern void ConnectWeb3(string appLogo, string appTitle, string appDesc);
+        private static extern void ConnectWeb3(string appLogo, string appTitile, string appDesc);
 
         [DllImport("__Internal")]
         private static extern void SendContractJs(string method, string abi, string contract, string args, string value, string gasLimit, string gasPrice);
@@ -73,14 +73,13 @@ namespace MoralisUnity
                 appLogo = clientMeta.Icons[0];
             }
 
-            //ConnectWeb3(appLogo, clientMeta.Name, clientMeta.Description);
+            ConnectWeb3(appLogo, clientMeta.Name, clientMeta.Description);
 
             while (loop < waitLoops && account.Length < 1)
             {
                 await UniTask.DelayFrame(30);
 
-                //account = ConnectAccount();
-                account = "0x1234567890123456789012345678901234567890";
+                account = ConnectAccount();
 
                 loop++;
             }
@@ -205,8 +204,7 @@ namespace MoralisUnity
         /// <returns></returns>
         public static int ChainId()
         {
-            //return GetNetwork();
-            return 5;
+            return GetNetwork();
         }
 
         /// <summary>
@@ -215,8 +213,7 @@ namespace MoralisUnity
         /// <returns></returns>
         public static string Account()
         {
-            //return ConnectAccount();
-            return "0x6d8b494901D0D3893646337887Adbe5c226A1985";
+            return ConnectAccount();
         }
 
         /// <summary>

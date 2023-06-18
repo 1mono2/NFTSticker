@@ -38,7 +38,6 @@ using MoralisUnity.Web3Api.Core;
 using MoralisUnity.Web3Api.Core.Models;
 using MoralisUnity.Web3Api.Interfaces;
 using MoralisUnity.Web3Api.Models;
-using UnityEngine;
 
 namespace MoralisUnity.Web3Api.Api
 {

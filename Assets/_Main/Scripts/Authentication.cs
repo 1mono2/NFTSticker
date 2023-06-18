@@ -237,18 +237,19 @@ using MoralisUnity.Web3Api.Models;
                     string appId = Moralis.DappId;
                     long serverTime = 0;
 
-                    // Retrieve server time from Moralis Server for message signature
-                    Dictionary<string, object> serverTimeResponse =
-                        await Moralis.Cloud.RunAsync<Dictionary<string, object>>("getServerTime",
-                            new Dictionary<string, object>());
-
-                    if (serverTimeResponse == null || !serverTimeResponse.ContainsKey("dateTime") ||
-                        !long.TryParse(serverTimeResponse["dateTime"].ToString(), out serverTime))
-                    {
-                        Debug.LogError("Failed to retrieve server time from Moralis Server!");
-                    }
-
-                    string signMessage = $"Moralis Authentication\n\nId: {appId}:{serverTime}";
+                    // // Retrieve server time from Moralis Server for message signature
+                    // Dictionary<string, object> serverTimeResponse =
+                    //     await Moralis.Cloud.RunAsync<Dictionary<string, object>>("getServerTime",
+                    //         new Dictionary<string, object>());
+                    //
+                    // if (serverTimeResponse == null || !serverTimeResponse.ContainsKey("dateTime") ||
+                    //     !long.TryParse(serverTimeResponse["dateTime"].ToString(), out serverTime))
+                    // {
+                    //     Debug.LogError("Failed to retrieve server time from Moralis Server!");
+                    // }
+                    //
+                    // string signMessage = $"Moralis Authentication\n\nId: {appId}:{serverTime}";
+                    string signMessage = "Moralis Authentication\n\nId: " + appId + ":";
 
                     string signature = null;
 
@@ -279,12 +280,12 @@ using MoralisUnity.Web3Api.Models;
                     int chainId = Web3GL.ChainId();
 
                     // Attempt to login user.
-                    MoralisUser user = await Moralis.LogInAsync(authData, chainId);
+                    //MoralisUser user = await Moralis.LogInAsync(authData, chainId);
 
-                    if (user != null)
-                    {
-                        State = AuthenticationKitState.MoralisLoggedIn;
-                    }
+                    // if (user != null)
+                    // {
+                    //     State = AuthenticationKitState.MoralisLoggedIn;
+                    // }
                 }
             }
 #endif

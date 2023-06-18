@@ -14,6 +14,7 @@ namespace MoralisUnity.Web3Api.Models
 		ropsten = 0x3,
 		rinkeby = 0x4,
 		goerli = 0x5,
+		sepolia = 0xaa36a7,
 		kovan = 0x2a,
 		polygon = 0x89,
 		mumbai = 0x13881,

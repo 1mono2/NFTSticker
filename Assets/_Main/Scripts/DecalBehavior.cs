@@ -22,6 +22,12 @@ public class DecalBehavior : MonoBehaviour
         SwitchToMoveMode();
     }
 
+    public void FixPosition()
+    {
+        ResetAllBehavior();
+        _leanMultiUpdate.enabled = false;
+    }
+
     public void SwitchToMoveMode()
     {
         ResetAllBehavior();
@@ -61,5 +67,9 @@ public class DecalBehavior : MonoBehaviour
         _scaleArrows.SetActive(false);
         
     }
-    
+
+    private void OnDisable()
+    {
+        ResetAllBehavior();
+    }
 }

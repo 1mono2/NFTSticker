@@ -35,6 +35,7 @@ public class GetNFTImage : MonoBehaviour
     [SerializeField] private GameObject _nftContainerTemplate;
     
     IAccountApi _accountApi;
+    
 
     public async void GetNftImage()
     {

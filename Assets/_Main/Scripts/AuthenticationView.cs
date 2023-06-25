@@ -10,6 +10,8 @@ using System.Collections;
 using UnityEngine.Events;
 using MoralisUnity.Sdk.Exceptions;
 using MoralisUnity.Kits.AuthenticationKit;
+using TMPro;
+using DG.Tweening;
 
 
 /// <summary>
@@ -29,6 +31,8 @@ public class AuthenticationView : MonoBehaviour
     [Header("Platforms")] [SerializeField] private GameObject _iosPlatform = null;
 
     [SerializeField] private GameObject _walletConnectPlatform = null;
+    
+    [Header("Canvas")] [SerializeField] private CanvasGroup _canvasGroup = null;
 
     [Header("Buttons")] [SerializeField] private Button _connectButton = null;
 
@@ -36,11 +40,9 @@ public class AuthenticationView : MonoBehaviour
 
     [SerializeField] private Button _retryButton = null;
 
-    [Header("Other")] [SerializeField] private Text _statusText = null;
-
-    [SerializeField] private Image _backgroundImage = null;
-
-    [Header("Styling")] [SerializeField] private Color _backgroundImageColor = new Color(0, 0, 0, 0.5f);
+    [Header("Other")] [SerializeField] private TextMeshProUGUI _statusText = null;
+    [SerializeField] GameObject _loadingIndicator = null;
+    [SerializeField] GameObject _checkmark = null;
 
     //  Unity Methods ---------------------------------
     protected void Start()
@@ -59,10 +61,6 @@ public class AuthenticationView : MonoBehaviour
     {
         // This works at edit time and thus at runtime
         // Note: At edit time the image may be NOT active (to unclutter UI). That is ok.
-        if (_backgroundImageColor != null && _backgroundImage != null)
-        {
-            _backgroundImage.color = _backgroundImageColor;
-        }
     }
 
     private void OnApplicationPause(bool pauseStatus)
@@ -133,9 +131,10 @@ public class AuthenticationView : MonoBehaviour
 
         // Texts
         _statusText.gameObject.SetActive(isActive);
+        _loadingIndicator.SetActive(isActive);
 
         // Keep as default. Expected, set again after method call.
-        _statusText.text = "Status";
+        //_statusText.text = "Status";
     }
 
 
@@ -178,7 +177,6 @@ public class AuthenticationView : MonoBehaviour
                 // Show Button "Connect"
                 SetActiveUIAllParts(false);
                 _connectButton.gameObject.SetActive(true);
-                _backgroundImage.gameObject.SetActive(true);
 
                 break;
             case AuthenticationKitState.WalletConnecting:
@@ -192,22 +190,24 @@ public class AuthenticationView : MonoBehaviour
                 {
                     case AuthenticationKitPlatform.iOS:
                         // Hide statusText first will be turned on by WalletConnect when a user click on a wallet
-                        _statusText.gameObject.SetActive(false);
-                        _statusText.text = "Connecting With Your Wallet";
+                        //_statusText.gameObject.SetActive(false);
+                        //_statusText.text = "Connecting With Your Wallet";
                         // TODO show message if there is no wallet installed on the device
+                        _loadingIndicator.SetActive(true);
                         break;
                     case AuthenticationKitPlatform.Android:
-                        _statusText.gameObject.SetActive(true);
-                        _statusText.text = "Connecting With Your Wallet";
+                        //_statusText.gameObject.SetActive(true);
+                        //_statusText.text = "Connecting With Your Wallet";
 
                         // TODO show message if there is no wallet installed on the device
-
+                        _loadingIndicator.SetActive(true);
                         break;
                     case AuthenticationKitPlatform.WebGL:
                         _statusText.gameObject.SetActive(true);
                         if (!Application.isEditor)
                         {
-                            _statusText.text = "Connecting With Your Wallet";
+                            //_statusText.text = "Connecting With Your Wallet";
+                            _loadingIndicator.SetActive(true);
                         }
                         else
                         {
@@ -219,6 +219,7 @@ public class AuthenticationView : MonoBehaviour
                     case AuthenticationKitPlatform.WalletConnect:
                         // Hide status text because the QR has it own status text
                         _statusText.gameObject.SetActive(false);
+                        _loadingIndicator.SetActive(true);
                         break;
                     default:
                         //Do nothing for other states
@@ -231,11 +232,15 @@ public class AuthenticationView : MonoBehaviour
                 break;
             case AuthenticationKitState.WalletSigning:
                 SetActiveUIAllParts(false);
-                _statusText.gameObject.SetActive(true);
-                _statusText.text = "Signing With Your Wallet";
+                //_statusText.gameObject.SetActive(true);
+                //_statusText.text = "Signing With Your Wallet";
+                _loadingIndicator.SetActive(true);
                 break;
             case AuthenticationKitState.WalletSigned:
                 SetActiveUIAllParts(false);
+                // hide authentication UI
+                _canvasGroup.DOFade(0, 1f).OnComplete(() => { _canvasGroup.gameObject.SetActive(false); });
+                _checkmark.SetActive(true);
                 break;
             case AuthenticationKitState.MoralisLoggingIn:
                 // No UI changes here

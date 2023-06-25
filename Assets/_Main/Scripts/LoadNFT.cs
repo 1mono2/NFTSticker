@@ -44,9 +44,9 @@ public class LoadNFT : MonoBehaviour
 
     public async void GetNftImage()
     {
-        //_publicKey = Web3WalletData.Instance.PublicKey;
-        //var chainEntry = Web3WalletData.Instance.ChainEntry;
-        //_chain = chainEntry.EnumValue;
+        _publicKey = Web3WalletData.Instance.PublicKey;
+        var chainEntry = Web3WalletData.Instance.ChainEntry;
+        _chain = chainEntry.EnumValue;
 
         MoralisClient.Initialize(true, ApiKey);
         _accountApi = MoralisClient.Web3Api.Account;

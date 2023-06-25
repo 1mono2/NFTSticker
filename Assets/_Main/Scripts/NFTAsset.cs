@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Attribute = System.Attribute;
+using DG.Tweening;
 
 public class NFTAsset : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class NFTAsset : MonoBehaviour
     [SerializeField] private Image _nftImage;
     [SerializeField] private Button _spawnButton;
     [SerializeField] private Button _removeButton;
+
+    private void Start()
+    {
+        this.gameObject.transform.DOScale(Vector3.zero, 0f);
+        this.gameObject.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.InCubic).SetRelative(true);
+    }
 
     public void Initialize(Sprite sprite, string name, Metadata metadata = null)
     {

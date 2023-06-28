@@ -159,7 +159,7 @@ public class AuthenticationView : MonoBehaviour
     }
 
 
-    private void AuthenticationKit_OnStateChanged(AuthenticationKitState authenticationKitState)
+    private async void AuthenticationKit_OnStateChanged(AuthenticationKitState authenticationKitState)
     {
         switch (authenticationKitState)
         {
@@ -239,8 +239,9 @@ public class AuthenticationView : MonoBehaviour
             case AuthenticationKitState.WalletSigned:
                 SetActiveUIAllParts(false);
                 // hide authentication UI
-                _canvasGroup.DOFade(0, 1f).OnComplete(() => { _canvasGroup.gameObject.SetActive(false); });
                 _checkmark.SetActive(true);
+                await UniTask.Delay(1000);
+                _canvasGroup.DOFade(0, 1f).OnComplete(() => { _canvasGroup.gameObject.SetActive(false); });
                 break;
             case AuthenticationKitState.MoralisLoggingIn:
                 // No UI changes here

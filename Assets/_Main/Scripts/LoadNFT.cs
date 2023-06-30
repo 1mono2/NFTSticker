@@ -25,7 +25,7 @@ public class LoadNFT : MonoBehaviour
 {
     // Start is called before the first frame update
     private const string ApiKey = "zb4sYWpTvVBbIoMHiuoAh4ejbEJgtwoAcRqWwVbrnY1NSgMIg6GBWrCS89ATvBQE";
-    private string _publicKey = "0x6d8b494901D0D3893646337887Adbe5c226A1985";
+    private string _publicKey = "";
     private ChainList _chain = ChainList.eth;
 
     [SerializeField] private GameObject _attributeTemplate;

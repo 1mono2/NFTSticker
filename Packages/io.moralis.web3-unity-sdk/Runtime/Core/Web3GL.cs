@@ -15,7 +15,7 @@ namespace MoralisUnity
         private static bool isConnected;
 
         [DllImport("__Internal")]
-        private static extern void ConnectWeb3(string appLogo, string appTitile, string appDesc);
+        private static extern void ConnectWeb3(string appLogo, string appTitle, string appDesc);
 
         [DllImport("__Internal")]
         private static extern void SendContractJs(string method, string abi, string contract, string args, string value, string gasLimit, string gasPrice);

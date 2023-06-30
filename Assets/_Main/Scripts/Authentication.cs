@@ -286,6 +286,12 @@ using MoralisUnity.Web3Api.Models;
                     // {
                     //     State = AuthenticationKitState.MoralisLoggedIn;
                     // }
+                    
+                    Web3WalletData.Instance.SetPublicKey(address);
+                    var currentChainEntry = SupportedEvmChains.FromChainList(chainId);
+                    Web3WalletData.Instance.SetChainEntry(currentChainEntry);
+                    
+                    State = AuthenticationKitState.MoralisLoggedIn;
                 }
             }
 #endif

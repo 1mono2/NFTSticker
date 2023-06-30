@@ -240,7 +240,7 @@ public class AuthenticationView : MonoBehaviour
                 SetActiveUIAllParts(false);
                 // hide authentication UI
                 _checkmark.SetActive(true);
-                await UniTask.Delay(1000);
+                await UniTask.Delay(1500);
                 _canvasGroup.DOFade(0, 1f).OnComplete(() => { _canvasGroup.gameObject.SetActive(false); });
                 break;
             case AuthenticationKitState.MoralisLoggingIn:
@@ -249,7 +249,7 @@ public class AuthenticationView : MonoBehaviour
             case AuthenticationKitState.MoralisLoggedIn:
                 // Show Button "Disconnect"
                 SetActiveUIAllParts(false);
-                _disconnectButton.gameObject.SetActive(true);
+                //_disconnectButton.gameObject.SetActive(true);
                 break;
             case AuthenticationKitState.Disconnecting:
                 // No UI changes here
@@ -262,6 +262,15 @@ public class AuthenticationView : MonoBehaviour
                 break;
         }
     }
+
+    public async void OnWalletSigned()
+    {
+        SetActiveUIAllParts(false);
+        // hide authentication UI
+        _checkmark.SetActive(true);
+        await UniTask.Delay(1500);
+        _canvasGroup.DOFade(0, 1f).OnComplete(() => { _canvasGroup.gameObject.SetActive(false); });
+    } 
 
     IEnumerator EnableAfterSeconds(Button button, bool isActive = false, int seconds = 0)
     {
